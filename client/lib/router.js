@@ -44,10 +44,22 @@ export function navigate(path, { replace = false } = {}) {
 }
 
 /**
- * Parse route pattern and extract params
- * @param {string} pattern
- * @param {string} path
- * @returns {Object|null}
+ * Parse route pattern and extract params.
+ *
+ * NOTE: This function is intentionally duplicated from server/utils/http.ts
+ * to enable isomorphic routing patterns. Both client and server need the
+ * same path matching logic. Sharing code would require a build step,
+ * which we avoid to keep the client simple.
+ *
+ * If you modify this function, update the server version as well.
+ *
+ * @param {string} pattern - Route pattern with :param placeholders
+ * @param {string} path - Actual URL path to match
+ * @returns {Object|null} - Extracted params or null if no match
+ *
+ * @example
+ *   matchRoute('/items/:id', '/items/123')
+ *   // Returns: { id: '123' }
  */
 function matchRoute(pattern, path) {
   const patternParts = pattern.split('/').filter(Boolean);

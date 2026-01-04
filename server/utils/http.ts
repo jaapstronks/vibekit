@@ -103,7 +103,22 @@ export function parseQuery(url: URL): Record<string, string> {
 }
 
 /**
- * Extract path parameter from pattern match
+ * Extract path parameters from a URL pattern match.
+ *
+ * NOTE: This function is intentionally duplicated in client/lib/router.js
+ * to enable isomorphic routing patterns. Both client and server need the
+ * same path matching logic, and sharing code between them would require
+ * a build step. Keeping them separate maintains the "no build required"
+ * philosophy for the client.
+ *
+ * If you modify this function, update the client version as well.
+ *
+ * @example
+ *   matchPath('/api/items/:id', '/api/items/123')
+ *   // Returns: { id: '123' }
+ *
+ *   matchPath('/users/:userId/posts/:postId', '/users/5/posts/42')
+ *   // Returns: { userId: '5', postId: '42' }
  */
 export function matchPath(pattern: string, pathname: string): Record<string, string> | null {
   const patternParts = pattern.split('/').filter(Boolean);
@@ -116,8 +131,8 @@ export function matchPath(pattern: string, pathname: string): Record<string, str
   const params: Record<string, string> = {};
 
   for (let i = 0; i < patternParts.length; i++) {
-    const patternPart = patternParts[i];
-    const pathPart = pathParts[i];
+    const patternPart = patternParts[i] as string;
+    const pathPart = pathParts[i] as string;
 
     if (patternPart.startsWith(':')) {
       params[patternPart.slice(1)] = decodeURIComponent(pathPart);
