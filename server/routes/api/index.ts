@@ -5,7 +5,6 @@
  */
 
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { handleItems } from './items.js';
 import { notFound } from '../../utils/http.js';
 
 export interface ApiContext {
@@ -17,14 +16,23 @@ export interface ApiContext {
 /**
  * Main API handler
  * Routes requests to appropriate handlers.
+ *
+ * Add handlers for your API endpoints. Each handler should return true
+ * if it handled the request, false otherwise.
+ *
+ * Example:
+ *   import { handleUsers } from './users.js';
+ *
+ *   export async function handleApi(ctx: ApiContext): Promise<void> {
+ *     if (await handleUsers(ctx)) return;
+ *     notFound(ctx.res);
+ *   }
+ *
+ * See examples/items-crud for a complete CRUD example.
  */
 export async function handleApi(ctx: ApiContext): Promise<void> {
-  // Items (demo CRUD resource)
-  if (await handleItems(ctx)) return;
-
-  // Add more handlers here:
+  // Add your API handlers here:
   // if (await handleUsers(ctx)) return;
-  // if (await handleSettings(ctx)) return;
 
   // No handler matched
   notFound(ctx.res);

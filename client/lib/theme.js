@@ -147,6 +147,5 @@ export function createThemeSelector() {
   return select;
 }
 
-// Legacy exports for backwards compatibility
+// Legacy export for backwards compatibility
 export { getEffectiveTheme as getTheme };
-export { createThemeToggle as createThemeToggle };

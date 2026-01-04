@@ -17,10 +17,32 @@ A boring but accessible starter kit for building internal tool applications.
 |-------|------------|
 | Language | TypeScript (server), JavaScript (client) |
 | UI Components | [Shoelace](https://shoelace.style/) web components |
+| Build | esbuild (client bundling) |
 | Styling | CSS Variables + minimal utilities |
 | Server | Native Node.js HTTP (no framework) |
 | Testing | Vitest (unit) + Playwright (E2E) |
 | Linting | ESLint + Prettier |
+
+### Build System
+
+The client uses [esbuild](https://esbuild.github.io/) to bundle JavaScript and Shoelace components:
+
+- **Fast** - Builds complete in <100ms
+- **Local dependencies** - No CDN or external runtime dependencies
+- **Tree-shaking** - Only bundles components you use
+- **Watch mode** - `npm run dev:client` for live rebuilds
+
+The build runs automatically on `npm install` and before starting the dev server.
+
+### Why JavaScript for the Client?
+
+The client uses plain JavaScript (not TypeScript) intentionally:
+
+- **JSDoc for types** - Get IDE autocomplete without compilation overhead
+- **Simpler debugging** - Source maps are optional, source is readable
+- **Easier onboarding** - Newcomers can read and modify code immediately
+
+To add TypeScript to the client, update `scripts/build-client.js` to use `.ts` entry points.
 
 ## Quick Start
 
@@ -53,7 +75,13 @@ vibekit/
 │   │   ├── toast.js       # Notifications
 │   │   ├── dialogs.js     # Confirm/alert/prompt
 │   │   ├── theme.js       # Light/dark mode
-│   │   └── components.js  # UI component helpers
+│   │   ├── components.js  # UI component helpers
+│   │   ├── shoelace.js    # Shoelace form helpers
+│   │   ├── validation.js  # Form validation
+│   │   ├── loading.js     # Loading states
+│   │   ├── file-upload.js # File upload helpers
+│   │   ├── tabs.js        # Tab interface
+│   │   └── markdown-field.js  # Markdown editor
 │   ├── views/             # Route views
 │   └── styles/            # CSS
 │       ├── tokens.css     # Design tokens
@@ -70,10 +98,10 @@ vibekit/
 │   │   ├── api/          # API endpoints
 │   │   └── static.ts     # Static file server
 │   ├── storage/           # Data access
-│   └── utils/             # Helpers
+│   └── utils/             # Helpers (http.ts, llm.ts)
 │
-├── shared/                # Shared code
-│   └── types/            # TypeScript types
+├── examples/              # Example features
+│   └── items-crud/        # Complete CRUD example
 │
 ├── tests/                 # Tests
 │   ├── unit/             # Vitest
@@ -85,19 +113,63 @@ vibekit/
 ## Available Scripts
 
 ```bash
-npm run dev        # Start dev server with watch mode
-npm run start      # Start production server
-npm run build      # Build TypeScript
-npm run lint       # Run ESLint
-npm run format     # Run Prettier
-npm run test       # Run unit tests
-npm run test:e2e   # Run E2E tests
-npm run check      # Run all checks
+npm run dev          # Build client + start dev server with watch mode
+npm run dev:client   # Watch mode for client builds only
+npm run start        # Start production server
+npm run build        # Build client + TypeScript
+npm run build:client # Build client JavaScript only
+npm run lint         # Run ESLint
+npm run format       # Run Prettier
+npm run test         # Run unit tests
+npm run test:e2e     # Run E2E tests
+npm run check        # Run all checks
 ```
 
 ## UI Components
 
-Vibekit uses [Shoelace](https://shoelace.style/) for UI components. Common patterns are wrapped in helper functions:
+Vibekit uses [Shoelace](https://shoelace.style/) for UI components. Components are bundled with esbuild, so they're available offline with no external dependencies. Common patterns are wrapped in helper functions.
+
+### Shoelace Helpers
+
+Create Shoelace elements with less boilerplate using `lib/shoelace.js`:
+
+```javascript
+import { slInput, slButton, slSelect, slTextarea, slSwitch } from './lib/shoelace.js';
+
+// Input with all options
+const emailInput = slInput({
+  label: 'Email',
+  type: 'email',
+  placeholder: 'you@example.com',
+  required: true,
+  helpText: 'We will never share your email',
+  onInput: (e) => console.log(e.target.value)
+});
+
+// Select with options
+const roleSelect = slSelect({
+  label: 'Role',
+  placeholder: 'Choose a role',
+  options: [
+    { value: 'admin', label: 'Administrator' },
+    { value: 'user', label: 'Regular User' },
+    { value: 'guest', label: 'Guest', disabled: true }
+  ],
+  onChange: (e) => console.log(e.target.value)
+});
+
+// Button with icon
+const submitBtn = slButton({
+  label: 'Save Changes',
+  variant: 'primary',
+  prefixIcon: 'check',
+  onClick: handleSubmit
+});
+```
+
+### Component Helpers
+
+Common patterns are wrapped in helper functions:
 
 ### Page Header
 
@@ -239,8 +311,13 @@ Three shell layouts are available via CSS classes:
 2. **Add storage** in `server/storage/`
 3. **Create view** in `client/views/`
 4. **Add route** in `client/app.js`
+5. **Register handler** in `server/routes/api/index.ts`
 
-See the Items feature for a complete example.
+See `examples/items-crud/` for a complete CRUD example with:
+- File-based JSON storage
+- RESTful API endpoints
+- List and form views
+- Full validation and error handling
 
 ## Theming
 

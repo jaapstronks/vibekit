@@ -850,3 +850,78 @@ body.is-loading {
 .vk-markdown-preview a {
   color: var(--vk-color-primary);
 }
+
+/* ============================================
+ * WELCOME PAGE
+ * Getting started landing page.
+ * ============================================ */
+.vk-welcome {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.vk-welcome-header {
+  text-align: center;
+  margin-bottom: var(--vk-space-8);
+}
+
+.vk-welcome-header h1 {
+  font-size: var(--vk-text-3xl);
+  font-weight: var(--vk-weight-bold);
+  margin-bottom: var(--vk-space-2);
+}
+
+.vk-welcome-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--vk-space-6);
+}
+
+.vk-welcome .vk-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--vk-space-3);
+}
+
+.vk-welcome .vk-card-header h2 {
+  font-size: var(--vk-text-base);
+  font-weight: var(--vk-weight-semibold);
+  margin: 0;
+}
+
+.vk-welcome .vk-card-body p {
+  font-size: var(--vk-text-sm);
+  color: var(--vk-color-text-secondary);
+  margin: 0 0 var(--vk-space-2);
+}
+
+.vk-welcome .vk-card-body p:last-child {
+  margin-bottom: 0;
+}
+
+.vk-welcome .vk-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.vk-welcome .vk-list li {
+  font-size: var(--vk-text-sm);
+  color: var(--vk-color-text-secondary);
+  padding: var(--vk-space-1) 0;
+}
+
+.vk-welcome code {
+  font-family: var(--vk-font-mono);
+  font-size: 0.85em;
+  padding: 0.125em 0.375em;
+  background: var(--vk-color-bg-muted);
+  border-radius: var(--vk-radius-sm);
+  color: var(--vk-color-text);
+}
+
+.vk-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vk-space-2);
+}

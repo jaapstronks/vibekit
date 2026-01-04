@@ -3,7 +3,7 @@
  * Create or edit an item.
  */
 
-import { h, empty, $ } from '../../lib/dom.js';
+import { h, empty } from '../../lib/dom.js';
 import { get, post, put } from '../../lib/api.js';
 import { success, error } from '../../lib/toast.js';
 import { pageHeader, formGroup, formActions, loading, emptyState } from '../../lib/components.js';
